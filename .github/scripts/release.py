@@ -7,7 +7,8 @@ def get_last_version() -> str:
     """Return the version number of the last release."""
     json_string = (
         subprocess.run(
-            ["gh", "release", "view", "--json", "tagName"],
+            # ["gh", "release", "view", "--json", "tagName"],
+            ["gh", "release", "list"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
