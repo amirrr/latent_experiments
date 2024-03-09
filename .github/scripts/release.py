@@ -16,7 +16,8 @@ def get_last_version() -> str:
         .stdout.decode("utf8")
         .strip()
     )
-
+    
+    print(json_string)
     return json.loads(json_string)["tagName"]
 
 
