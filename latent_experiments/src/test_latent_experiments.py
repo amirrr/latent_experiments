@@ -4,6 +4,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, No
 from sklearn.metrics.pairwise import cosine_similarity
 
 from latent_experiments import calculate_scaled_cosine_similarity
+import pytest
 
 def test_calculate_scaled_cosine_similarity():
     # Test case 1: Test with sample data
