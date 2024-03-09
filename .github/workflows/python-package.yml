@@ -4,6 +4,11 @@
 name: Python package
 
 on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Release version"
+        default: "0.0.1"
   push:
     branches: [ "main" ]
   pull_request:
@@ -11,7 +16,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,7 +23,8 @@ jobs:
         python-version: ["3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -38,3 +43,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Create new patch release
+      run: .github/scripts/release.py
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
