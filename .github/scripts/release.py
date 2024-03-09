@@ -30,6 +30,7 @@ def create_new_patch_release():
     try:
         last_version_number = get_last_version()
     except subprocess.CalledProcessError as err:
+        print("first release - giving default version number")
         if err.stderr.decode("utf8").startswith("HTTP 404:"):
             # The project doesn't have any releases yet.
             new_version_number = "0.0.1"
@@ -38,10 +39,24 @@ def create_new_patch_release():
     else:
         new_version_number = bump_patch_number(last_version_number)
 
-    subprocess.run(
-        ["gh", "release", "create", "--generate-notes", new_version_number],
-        check=True,
-    )
+    print("new version", new_version_number)
+
+    # subprocess.run(
+    #     ["gh", "release", "create", "--generate-notes", new_version_number],
+    #     check=True,
+    # )
+    # subprocess.run(
+    #     [
+    #         "gh",
+    #         "api",
+    #         "repos/owner/repo/actions/secrets",
+    #         "--method",
+    #         "GET",
+    #         "HEADER",
+    #         "Authorization: token ${GITHUB_TOKEN}",
+    #     ],
+    #     check=True,
+    # )
 
 
 if __name__ == "__main__":
