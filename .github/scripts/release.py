@@ -7,7 +7,8 @@ def get_last_version() -> str:
     """Return the version number of the last release."""
     json_string = (
         subprocess.run(
-            ["gh", "release", "view", "--json", "Latest"],
+            # ["gh", "release", "view", "--json", "Latest"],
+            ["gh", "release", "list", "--help"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -15,9 +16,9 @@ def get_last_version() -> str:
         .stdout.decode("utf8")
         .strip()
     )
-    
-    print("json string:",json_string)
-    return # json.loads(json_string)["Latest"]
+
+    print("json string:", json_string)
+    return  # json.loads(json_string)["Latest"]
 
 
 def bump_patch_number(version_number: str) -> str:
