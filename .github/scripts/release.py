@@ -7,8 +7,7 @@ def get_last_version() -> str:
     """Return the version number of the last release."""
     json_string = (
         subprocess.run(
-            # ["gh", "release", "view", "--json", "Latest"],
-            ["gh", "release", "list"],
+            ["gh", "release", "view", "--json", "Latest"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -18,7 +17,7 @@ def get_last_version() -> str:
     )
 
     print("json string:", json_string)
-    return  # json.loads(json_string)["Latest"]
+    return json.loads(json_string)["Latest"]
 
 
 def bump_patch_number(version_number: str) -> str:
@@ -43,22 +42,11 @@ def create_new_patch_release():
 
     print("new version", new_version_number)
 
-    # subprocess.run(
-    #     ["gh", "release", "create", "--generate-notes", new_version_number],
-    #     check=True,
-    # )
-    # subprocess.run(
-    #     [
-    #         "gh",
-    #         "api",
-    #         "repos/owner/repo/actions/secrets",
-    #         "--method",
-    #         "GET",
-    #         "HEADER",
-    #         "Authorization: token ${GITHUB_TOKEN}",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        ["gh", "release", "create", "--generate-notes", new_version_number],
+        check=True,
+    )
+ 
 
 
 if __name__ == "__main__":
