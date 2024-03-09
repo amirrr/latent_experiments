@@ -44,6 +44,9 @@ jobs:
       run: |
         pytest
     - name: Create new patch release
-      run: .github/scripts/release.py
+      run: |
+        sudo apt-get install gh -y
+        echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
+        .github/scripts/release.py
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
