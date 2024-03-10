@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="latent_experiments",  
-    version="0.0.6",  
+    version="0.0.7",  
     author="Amirhossein Nakhaei",  
     description="A package for running and plotting latent experiments.",
     long_description=long_description, 

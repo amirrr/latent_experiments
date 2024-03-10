@@ -68,3 +68,41 @@ def calculate_scaled_cosine_similarity(data, scale_method="minmax"):
     cosine_similarity_df["max_index"] = cosine_similarity_df.idxmax(axis=1)
 
     return cosine_similarity_df
+
+
+def split_data_on_column(df, column_name, gap=0.9):
+    """
+    Split the data in a DataFrame based on a specified column.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to split.
+        column_name (str): The name of the column to split on.
+        gap (float, optional): The percentage of data to exclude from both ends. Defaults to 0.9.
+
+    Returns:
+        tuple: A tuple containing the lower subset and upper subset of the data.
+
+    """
+
+    if df.empty:
+        raise ValueError(
+            "The input data is empty. Please provide a non-empty DataFrame."
+        )
+
+    if column_name not in df.columns:
+        raise KeyError(f"Column '{column_name}' does not exist in the DataFrame.")
+
+    gap_length = (1 - gap) / 2
+    lower_quantile = df[column_name].quantile(0 + gap_length)
+    upper_quantile = df[column_name].quantile(1 - gap_length)
+
+    print(lower_quantile)
+    print(upper_quantile)
+
+    lower_subset = df[df[column_name] <= lower_quantile]
+    middle_subset = df[
+        (df[column_name] > lower_quantile) & (df[column_name] <= upper_quantile)
+    ]
+    upper_subset = df[df[column_name] >= upper_quantile]
+
+    return lower_subset, upper_subset
