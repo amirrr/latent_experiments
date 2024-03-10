@@ -44,9 +44,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up GitHub CLI
-        run: |
-          sudo apt-get install -y gh
       - name: Get the latest release version and create a new release
         run: |
           LATEST_TAG=$(gh release view --json tagName -q '.tagName' || echo "none")
@@ -64,4 +61,4 @@ jobs:
           fi
           gh release create $NEW_VERSION --generate-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
