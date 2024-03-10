@@ -11,6 +11,9 @@ from sklearn.preprocessing import (
 )
 
 
+__all__ = ["calculate_scaled_cosine_similarity", "split_data_on_column"]
+
+
 def calculate_scaled_cosine_similarity(data, scale_method="minmax"):
     """
     Calculate the scaled cosine similarity matrix for the given data.
