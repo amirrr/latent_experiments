@@ -1,7 +1,10 @@
 import pandas as pd
 import numpy as np
 
-from latent_experiments import calculate_scaled_cosine_similarity, split_data_on_column
+from .latent_experiments import (
+    calculate_scaled_cosine_similarity,
+    split_data_on_column,
+)
 import pytest
 
 

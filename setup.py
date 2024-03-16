@@ -17,7 +17,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],  
     python_requires=">=3.6",  
-    py_modules=["latent_experiments"],  
-    package_dir={"": "latent_experiments/src"}, 
+    py_modules=["latent_experiments/src"],  
+    package_dir={"": "src"}, 
     install_requires=[],  
 )

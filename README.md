@@ -15,7 +15,7 @@ import latent_experiments as le
 
 
 # Run experiments on a simple dataset
-outcome_diff_df = run_latent_experiments(
+outcome_diff_df = le.run_latent_experiments(
     data,
     columns_to_match=columns_to_match,
     outcome_var=outcome_var,
