@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+import sklearn.metrics.pairwise
 from sklearn.preprocessing import (
     MinMaxScaler,
     StandardScaler,
@@ -14,7 +14,9 @@ from sklearn.preprocessing import (
 __all__ = ["calculate_scaled_cosine_similarity", "split_data_on_column"]
 
 
-def calculate_scaled_cosine_similarity(data, scale_method="minmax"):
+def calculate_scaled_cosine_similarity(
+    data: pd.DataFrame, scale_method: str = "minmax"
+) -> pd.DataFrame:
     """
     Calculate the scaled cosine similarity matrix for the given data.
 
@@ -59,7 +61,7 @@ def calculate_scaled_cosine_similarity(data, scale_method="minmax"):
 
     normalized_df = pd.DataFrame(normalized_data, columns=data.columns)
 
-    cosine_similarity_matrix = cosine_similarity(normalized_df)
+    cosine_similarity_matrix = sklearn.metrics.pairwise.cosine_similarity(normalized_df)
 
     # Set diagonal to 0 from 1
     np.fill_diagonal(cosine_similarity_matrix, 0)
