@@ -9,6 +9,7 @@ from sklearn.preprocessing import (
     MaxAbsScaler,
     PowerTransformer,
 )
+# import seaborn as sns
 
 
 __all__ = ["calculate_scaled_cosine_similarity", "split_data_on_column"]
@@ -251,70 +252,70 @@ def run_latent_experiments(
         all_outcome_diffs["Group"], categories=columns_to_match
     )
 
-    # Define the color palette for the plot
-    if draw_plot:
-        pal = sns.cubehelix_palette(len(columns_to_match), rot=-0.25, light=0.7)
+    # # Define the color palette for the plot
+    # if draw_plot:
+    #     pal = sns.cubehelix_palette(len(columns_to_match), rot=-0.25, light=0.7)
 
-        # Set up the FacetGrid
-        g = sns.FacetGrid(
-            all_outcome_diffs,
-            row="Group",
-            hue="Group",
-            aspect=15,
-            height=1.0,
-            palette=pal,
-        )
+    #     # Set up the FacetGrid
+    #     g = sns.FacetGrid(
+    #         all_outcome_diffs,
+    #         row="Group",
+    #         hue="Group",
+    #         aspect=15,
+    #         height=1.0,
+    #         palette=pal,
+    #     )
 
-        # Draw the densities without fill color and transparent lines
-        g.map(
-            sns.kdeplot,
-            "Outcome_diff",
-            bw_adjust=0.5,
-            clip_on=False,
-            fill=True,
-            alpha=1,
-            linewidth=1.5,
-        )
-        g.map(
-            sns.kdeplot, "Outcome_diff", clip_on=False, color="w", lw=2, bw_adjust=0.5
-        )
+    #     # Draw the densities without fill color and transparent lines
+    #     g.map(
+    #         sns.kdeplot,
+    #         "Outcome_diff",
+    #         bw_adjust=0.5,
+    #         clip_on=False,
+    #         fill=True,
+    #         alpha=1,
+    #         linewidth=1.5,
+    #     )
+    #     g.map(
+    #         sns.kdeplot, "Outcome_diff", clip_on=False, color="w", lw=2, bw_adjust=0.5
+    #     )
 
-        # Draw a vertical line for the average of each distribution
-        def draw_average_line(x, **kwargs):
-            ax = plt.gca()
-            mean = np.mean(x)
-            ax.axvline(
-                mean, color="black", lw=2, ls="-"
-            )  # Customise color, linewidth, and linestyle as needed
+    #     # Draw a vertical line for the average of each distribution
+    #     def draw_average_line(x, **kwargs):
+    #         ax = plt.gca()
+    #         mean = np.mean(x)
+    #         ax.axvline(
+    #             mean, color="black", lw=2, ls="-"
+    #         )  # Customise color, linewidth, and linestyle as needed
 
-        g.map(draw_average_line, "Outcome_diff")
+    #     g.map(draw_average_line, "Outcome_diff")
 
-        # Define a simple function to label the plot in axes coordinates
-        def label(x, color, label):
-            ax = plt.gca()
-            ax.text(
-                0,
-                0.2,
-                label,
-                fontweight="bold",
-                color=color,
-                ha="left",
-                va="center",
-                transform=ax.transAxes,
-            )
+    #     # Define a simple function to label the plot in axes coordinates
+    #     def label(x, color, label):
+    #         ax = plt.gca()
+    #         ax.text(
+    #             0,
+    #             0.2,
+    #             label,
+    #             fontweight="bold",
+    #             color=color,
+    #             ha="left",
+    #             va="center",
+    #             transform=ax.transAxes,
+    #         )
 
-        g.map(label, "Outcome_diff")
+    #     g.map(label, "Outcome_diff")
 
-        # Set the subplots to overlap
-        g.figure.subplots_adjust(hspace=-0.25)
+    #     # Set the subplots to overlap
+    #     g.figure.subplots_adjust(hspace=-0.25)
 
-        # Remove axes details that don't play well with overlap
-        g.set_titles("")
-        g.set(yticks=[], ylabel="")
-        g.despine(bottom=True, left=True)
+    #     # Remove axes details that don't play well with overlap
+    #     g.set_titles("")
+    #     g.set(yticks=[], ylabel="")
+    #     g.despine(bottom=True, left=True)
 
-        current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    #     current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        plt.savefig(f"latent_exp_{current_date}.pdf")
+    #     plt.savefig(f"latent_exp_{current_date}.pdf")
 
     return all_outcome_diffs
