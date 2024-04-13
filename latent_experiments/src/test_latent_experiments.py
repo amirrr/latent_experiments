@@ -104,3 +104,156 @@ def test_split_data_on_column():
 
     pd.testing.assert_frame_equal(lower_subset, expected_lower_subset)
     pd.testing.assert_frame_equal(upper_subset, expected_upper_subset)
+
+
+def test_run_latent_experiments():
+    # Test case 1: Test with sample data
+    data = pd.DataFrame(
+        {
+            "A": [1, 2, 3, 4, 5],
+            "B": [6, 7, 8, 9, 10],
+            "Outcome": [0.1, 0.2, 0.3, 0.4, 0.5],
+        }
+    )
+    columns_to_match = ["A", "B"]
+    sns_theme = "white"
+    figsize = (15, 10)
+    outcome_var = "Outcome"
+    match_threshold = 0.2
+    draw_plot = False
+
+    result = run_latent_experiments(
+        data,
+        columns_to_match,
+        sns_theme,
+        figsize,
+        outcome_var,
+        match_threshold,
+        draw_plot,
+    )
+
+    expected_result = pd.DataFrame(
+        {
+            "Outcome_diff": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            "Group": ["A", "A", "A", "B", "B", "B"],
+        }
+    )
+
+    pd.testing.assert_frame_equal(result, expected_result)
+
+    # Test case 2: Test with empty data
+    empty_data = pd.DataFrame()
+    columns_to_match = ["A", "B"]
+    sns_theme = "white"
+    figsize = (15, 10)
+    outcome_var = "Outcome"
+    match_threshold = 0.2
+    draw_plot = False
+
+    result = run_latent_experiments(
+        empty_data,
+        columns_to_match,
+        sns_theme,
+        figsize,
+        outcome_var,
+        match_threshold,
+        draw_plot,
+    )
+
+    expected_result = pd.DataFrame(columns=["Outcome_diff", "Group"])
+
+    pd.testing.assert_frame_equal(result, expected_result)
+
+    # Test case 3: Test with different match threshold
+    data = pd.DataFrame(
+        {
+            "A": [1, 2, 3, 4, 5],
+            "B": [6, 7, 8, 9, 10],
+            "Outcome": [0.1, 0.2, 0.3, 0.4, 0.5],
+        }
+    )
+    columns_to_match = ["A", "B"]
+    sns_theme = "white"
+    figsize = (15, 10)
+    outcome_var = "Outcome"
+    match_threshold = 0.5
+    draw_plot = False
+
+    result = run_latent_experiments(
+        data,
+        columns_to_match,
+        sns_theme,
+        figsize,
+        outcome_var,
+        match_threshold,
+        draw_plot,
+    )
+
+    expected_result = pd.DataFrame(
+        {"Outcome_diff": [0.0, 0.0, 0.0, 0.0], "Group": ["A", "A", "B", "B"]}
+    )
+
+    pd.testing.assert_frame_equal(result, expected_result)
+
+    # Test case 4: Test with plotting enabled
+    data = pd.DataFrame(
+        {
+            "A": [1, 2, 3, 4, 5],
+            "B": [6, 7, 8, 9, 10],
+            "Outcome": [0.1, 0.2, 0.3, 0.4, 0.5],
+        }
+    )
+    columns_to_match = ["A", "B"]
+    sns_theme = "white"
+    figsize = (15, 10)
+    outcome_var = "Outcome"
+    match_threshold = 0.2
+    draw_plot = True
+
+    result = run_latent_experiments(
+        data,
+        columns_to_match,
+        sns_theme,
+        figsize,
+        outcome_var,
+        match_threshold,
+        draw_plot,
+    )
+
+    # Assert that the plot is displayed (cannot be tested programmatically)
+
+    assert isinstance(result, pd.DataFrame)
+
+    # Test case 5: Test with different outcome variable
+    data = pd.DataFrame(
+        {
+            "A": [1, 2, 3, 4, 5],
+            "B": [6, 7, 8, 9, 10],
+            "Result": [0.1, 0.2, 0.3, 0.4, 0.5],
+        }
+    )
+    columns_to_match = ["A", "B"]
+    sns_theme = "white"
+    figsize = (15, 10)
+    outcome_var = "Result"
+    match_threshold = 0.2
+    draw_plot = False
+
+    result = run_latent_experiments(
+        data,
+        columns_to_match,
+        sns_theme,
+        figsize,
+        outcome_var,
+        match_threshold,
+        draw_plot,
+    )
+
+    expected_result = pd.DataFrame(
+        {
+            "Outcome_diff": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            "Group": ["A", "A", "A", "B", "B", "B"],
+        }
+    )
+
+    pd.testing.assert_frame_equal(result, expected_result)
