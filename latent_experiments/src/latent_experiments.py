@@ -9,7 +9,9 @@ from sklearn.preprocessing import (
     MaxAbsScaler,
     PowerTransformer,
 )
-# import seaborn as sns
+
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 __all__ = ["calculate_scaled_cosine_similarity", "split_data_on_column"]
@@ -319,3 +321,68 @@ def run_latent_experiments(
     #     plt.savefig(f"latent_exp_{current_date}.pdf")
 
     return all_outcome_diffs
+
+
+# Assume `match_by_cosine_similarity` is a function you have that takes `data`, a `column`, `outcome_var`, and `match_threshold`
+# and returns a DataFrame which includes an 'Outcome_diff' column among others.
+
+
+def run_gap_experiment(
+    data,
+    columns_to_match,
+    outcome_var="Outcome",
+    gap_range=np.arange(0.1, 1.0, 0.1),
+    sns_theme="white",
+    figsize=(15, 10),
+):
+    """
+    Plots error as a function of gap size across different features.
+
+    Args:
+    data (pandas.DataFrame): The input data with columns to be matched and outcome variable.
+    columns_to_match (list): The columns to be used for matching.
+    outcome_var (str): The name of the outcome variable in the data.
+    gap_range (np.array): An array of threshold values to use as gap sizes.
+    sns_theme (str): The Seaborn theme to apply to the plot.
+    figsize (tuple): The size of the figure.
+
+    Returns:
+    None: Displays the plot.
+    """
+    sns.set_theme(style=sns_theme)
+
+    # DataFrame to collect gap sizes and their corresponding errors for each feature
+    error_gap_data = pd.DataFrame()
+
+    for column in columns_to_match:
+        for gap in gap_range:
+            # Assume this matches based on cosine similarity and calculates 'Outcome_diff' for each threshold
+            matched_data = match_by_cosine_similarity(data, column, outcome_var, gap)
+
+            # Calculate the mean error here, assuming 'Outcome_diff' is the error
+            mean_error = matched_data["Outcome_diff"].mean()
+
+            # Collecting gap, mean error, and the feature (group) in a DataFrame
+            error_gap_data = pd.concat(
+                [
+                    error_gap_data,
+                    pd.DataFrame(
+                        {"Gap": [gap], "Mean_Error": [mean_error], "Feature": [column]}
+                    ),
+                ]
+            )
+
+    # Now, error_gap_data contains the mean error for each feature across a range of gaps (thresholds)
+
+    # Plotting
+    plt.figure(figsize=figsize)
+    sns.lineplot(
+        data=error_gap_data, x="Gap", y="Mean_Error", hue="Feature", marker="o"
+    )
+
+    plt.title("Outcome Difference as a function of Gap Size across Features")
+    plt.xlabel("Gap Size")
+    plt.ylabel("Outcome difference")
+    plt.legend(title="Feature")
+    plt.grid(True)
+    plt.show()
