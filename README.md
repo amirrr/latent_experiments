@@ -1,6 +1,6 @@
 # latent_experiments
 
-Python package for running experiments on latent spaces of neural networks
+Python package for running experiments on latent spaces
 
 ## Installation
 
