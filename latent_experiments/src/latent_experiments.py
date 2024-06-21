@@ -1,6 +1,13 @@
+"""
+This module contains functions for conducting latent experiments on data.
+"""
+
 import pandas as pd
 import numpy as np
 import sklearn.metrics.pairwise
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from sklearn.preprocessing import (
     MinMaxScaler,
     StandardScaler,
@@ -10,8 +17,7 @@ from sklearn.preprocessing import (
     PowerTransformer,
 )
 
-import seaborn as sns
-import matplotlib.pyplot as plt
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 __all__ = ["calculate_scaled_cosine_similarity", "split_data_on_column"]
@@ -108,9 +114,6 @@ def split_data_on_column(df, column_name, gap=0.9):
     print(upper_quantile)
 
     lower_subset = df[df[column_name] <= lower_quantile]
-    middle_subset = df[
-        (df[column_name] > lower_quantile) & (df[column_name] <= upper_quantile)
-    ]
     upper_subset = df[df[column_name] >= upper_quantile]
 
     return lower_subset, upper_subset
@@ -119,6 +122,9 @@ def split_data_on_column(df, column_name, gap=0.9):
 def match_by_column(
     data_df, treatment_column, outcome_column, observation_column, gap_size=0.9
 ):
+    """
+    Match data based on a specified column.
+    """
 
     a, b = split_data_on_column(data_df, treatment_column, gap_size)
 
@@ -163,7 +169,19 @@ def match_by_column(
 
 
 def match_by_cosine_similarity(data, treatment_var_name, outcome_var_name, gap=0.9):
+    """
+    Matches observations in the data based on cosine similarity between their feature vectors.
 
+    Parameters:
+        data (pd.DataFrame): The input data containing the feature vectors and outcome variable.
+        treatment_var_name (str): The name of the treatment variable column in the data.
+        outcome_var_name (str): The name of the outcome variable column in the data.
+        gap (float, optional): The quantile gap used to split the data into upper and lower quantiles. Default is 0.9.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the matched observations from the upper and lower quantiles, along with their outcomes and outcome differences.
+
+    """
     # Split into upper and lower quantile
     higher, lower = split_data_on_column(
         data.drop(outcome_var_name, axis=1), treatment_var_name, gap=gap
@@ -209,11 +227,8 @@ def match_by_cosine_similarity(data, treatment_var_name, outcome_var_name, gap=0
 def run_latent_experiments(
     data,
     columns_to_match,
-    sns_theme="white",
-    figsize=(15, 10),
     outcome_var="Outcome",
     match_threshold=0.2,
-    draw_plot=True,
 ):
     """
     Plots outcome differences using cosine similarity matching across specified columns.
@@ -254,77 +269,7 @@ def run_latent_experiments(
         all_outcome_diffs["Group"], categories=columns_to_match
     )
 
-    # # Define the color palette for the plot
-    # if draw_plot:
-    #     pal = sns.cubehelix_palette(len(columns_to_match), rot=-0.25, light=0.7)
-
-    #     # Set up the FacetGrid
-    #     g = sns.FacetGrid(
-    #         all_outcome_diffs,
-    #         row="Group",
-    #         hue="Group",
-    #         aspect=15,
-    #         height=1.0,
-    #         palette=pal,
-    #     )
-
-    #     # Draw the densities without fill color and transparent lines
-    #     g.map(
-    #         sns.kdeplot,
-    #         "Outcome_diff",
-    #         bw_adjust=0.5,
-    #         clip_on=False,
-    #         fill=True,
-    #         alpha=1,
-    #         linewidth=1.5,
-    #     )
-    #     g.map(
-    #         sns.kdeplot, "Outcome_diff", clip_on=False, color="w", lw=2, bw_adjust=0.5
-    #     )
-
-    #     # Draw a vertical line for the average of each distribution
-    #     def draw_average_line(x, **kwargs):
-    #         ax = plt.gca()
-    #         mean = np.mean(x)
-    #         ax.axvline(
-    #             mean, color="black", lw=2, ls="-"
-    #         )  # Customise color, linewidth, and linestyle as needed
-
-    #     g.map(draw_average_line, "Outcome_diff")
-
-    #     # Define a simple function to label the plot in axes coordinates
-    #     def label(x, color, label):
-    #         ax = plt.gca()
-    #         ax.text(
-    #             0,
-    #             0.2,
-    #             label,
-    #             fontweight="bold",
-    #             color=color,
-    #             ha="left",
-    #             va="center",
-    #             transform=ax.transAxes,
-    #         )
-
-    #     g.map(label, "Outcome_diff")
-
-    #     # Set the subplots to overlap
-    #     g.figure.subplots_adjust(hspace=-0.25)
-
-    #     # Remove axes details that don't play well with overlap
-    #     g.set_titles("")
-    #     g.set(yticks=[], ylabel="")
-    #     g.despine(bottom=True, left=True)
-
-    #     current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
-    #     plt.savefig(f"latent_exp_{current_date}.pdf")
-
     return all_outcome_diffs
-
-
-# Assume `match_by_cosine_similarity` is a function you have that takes `data`, a `column`, `outcome_var`, and `match_threshold`
-# and returns a DataFrame which includes an 'Outcome_diff' column among others.
 
 
 def run_gap_experiment(
@@ -372,7 +317,8 @@ def run_gap_experiment(
                 ]
             )
 
-    # Now, error_gap_data contains the mean error for each feature across a range of gaps (thresholds)
+    # Now, error_gap_data contains the mean error for each
+    # feature across a range of gaps (thresholds)
 
     # Plotting
     plt.figure(figsize=figsize)

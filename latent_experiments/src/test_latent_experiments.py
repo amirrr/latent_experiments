@@ -1,14 +1,22 @@
+"""
+This module contains the unit tests for the latent_experiments module.
+"""
+
 import pandas as pd
 import numpy as np
+import pytest
 
 from .latent_experiments import (
     calculate_scaled_cosine_similarity,
     split_data_on_column,
+    run_latent_experiments,
 )
-import pytest
 
 
 def test_calculate_scaled_cosine_similarity():
+    """
+    This function tests the calculate_scaled_cosine_similarity function.
+    """
     # Test case 1: Test with sample data
     data = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6], "C": [7, 8, 9]})
 
@@ -52,6 +60,9 @@ def test_calculate_scaled_cosine_similarity():
 
 
 def test_split_data_on_column():
+    """
+    This function tests the split_data_on_column function.
+    """
     # Test case 1: Test with sample data
     data = pd.DataFrame({"A": [1, 2, 3, 4, 5], "B": [6, 7, 8, 9, 10]})
     column_name = "A"
@@ -107,6 +118,9 @@ def test_split_data_on_column():
 
 
 def test_run_latent_experiments():
+    """
+    This function tests the run_latent_experiments function.
+    """
     # Test case 1: Test with sample data
     data = pd.DataFrame(
         {
